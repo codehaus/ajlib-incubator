@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<project name="build" basedir=".">
+	<property name="build.dir" value="build" />
+	<property file="${build.dir}/${user.name}.build.properties" />
+	<property name="aspectj.lib" value="../lib/se/aspectj"/>
+	<!-- sources of input -->
+	<property name="src.dir" value="src" />
+	<property name="testsrc.dir" value="testsrc" />
+	<property name="runtimelib" value="../lib/se" />
+	<property name="testlib" value="../lib/testonly" />
+	<property name="emma.dir" value="../lib/tool/emma-2.0.4217" />
+
+
+	<!-- places for output -->
+	<property name="output.dir" value="../aj-build/output" />
+	<property name="prodoutput.dir" value="${output.dir}/prod/classes" />
+	<property name="testoutput.dir" value="${output.dir}/test/classes" />
+	<property name="dist.dir" value="../aj-build/dist" />
+	<property name="report.tests.dir" value="${output.dir}/reports" />
+	<property name="library.jar" value="${dist.dir}/ajlib.jar" />
+
+	<path id="emma.lib">
+		<pathelement location="${emma.dir}/emma.jar" />
+		<pathelement location="${emma.dir}/emma_ant.jar" />
+	</path>
+
+	<target name="init">
+		<path id="project.class.path">
+			<fileset dir="${runtimelib}" includes="**/*.jar" />
+			<fileset dir="${aspectj.lib}" includes="aspectjrt.jar, aspectjlib.jar" />
+			<pathelement location="${junit.jar}" />
+			<pathelement path="${java.class.path}" />
+		</path>
+		<path id="test.class.path">
+			<fileset dir="${testlib}" includes="**/*.jar" />
+			<pathelement location="${aspectj.lib}/aspectjtools.jar" />
+			<path refid="project.class.path" />
+		</path>
+
+		<taskdef resource="org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties">
+			<classpath>
+				<pathelement location="${aspectj.lib}/aspectjtools.jar" />
+				<path refid="project.class.path" />
+			</classpath>
+		</taskdef>
+
+		<!-- XXX TODO: verify this is fully conservative up to date check -->
+		<uptodate property="jar.current" targetfile="${library.jar}">
+			<srcfiles dir="${src.dir}" includes="**/*" />
+			<srcfiles dir="${runtimelib}" includes="**/*" />
+			<srcfiles dir="${basedir}" includes="**/build*.xml" />
+		</uptodate>
+
+		<!-- setup the directories -->
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${output.dir}" />
+		<mkdir dir="${prodoutput.dir}" />
+		<mkdir dir="${testoutput.dir}" />
+		<mkdir dir="${report.tests.dir}" />
+
+		<!-- Prevent unnecessary initialization -->
+		<property name="already.initted" value="true" />
+	</target>
+
+
+	<!-- Compiles production library code -->
+	<target name="compile" depends="init" unless="jar.current">
+		<iajc destdir="${prodoutput.dir}" incremental="false" source="1.3" target="1.3" sourceRootCopyFilter="**/*.java,**/CVS/**,**/*~,**/*#*,**/.#*,**/%*%,**/.cvsignore" xreweavable="true">
+			<src location="${src.dir}" />
+			<exclude name="**/CVS/*" />
+			<classpath refid="project.class.path" />
+		</iajc>
+	</target>
+
+	<!-- Creates distribution jar -->
+	<target name="jar" depends="compile" unless="jar.current">
+		<jar jarfile="${library.jar}" basedir="${prodoutput.dir}" />
+	</target>
+
+	<!-- Testing Targets -->
+	<target name="testcompile" depends="init">
+		<iajc incremental="false" destdir="${testoutput.dir}" xreweavable="true" x="noInline" debug="true" sourceRootCopyFilter="**/*.java,**/CVS/**,**/*~,**/*#*,**/.#*,**/%*%,**/.cvsignore">
+			<src location="${src.dir}" />
+			<src location="${testsrc.dir}" />
+			<exclude name="**/CVS/*" />
+			<classpath refid="test.class.path" />
+		</iajc>
+
+		<!-- shouldn't iajc be copying these things, just like javac?! -->
+		<copy todir="${testoutput.dir}">
+			<fileset dir="${src.dir}" includes="**/*.properties,**/*.xml" />
+			<fileset dir="${testsrc.dir}" includes="**/*.properties,**/*.xml" />
+		</copy>
+	</target>
+	<target name="coverageinstr" if="emma.dir" depends="init">
+		<taskdef resource="emma_ant.properties" classpathref="emma.lib" />
+		<path id="emma.path">
+			<pathelement location="${testoutput.dir}" /> 
+	    </path>
+		<delete file="${report.tests.dir}/*.emma" />
+		<emma>
+			<instr metadatafile="${report.tests.dir}/metadata.emma" mode="overwrite" instrpathref="emma.path">
+				<filter excludes="*.*Exception,*.Dummy*,*.Mock*,*.*TestCase"/>
+			</instr>
+		</emma>
+	</target>
+	<target name="testbuild" depends="testcompile, coverageinstr" />
+	<target name="junit" depends="init,testbuild">
+		<junit printsummary="yes" haltonfailure="no">
+			<classpath>
+				<path refid="emma.path" />
+				<pathelement location="${testoutput.dir}" />
+				<path refid="emma.lib" />
+				<path refid="test.class.path" />
+			</classpath>
+			<jvmarg value="-Demma.coverage.out.file=${report.tests.dir}/coverage.emma" />
+			<jvmarg value="-Demma.coverage.out.merge=true" />
+
+			<formatter type="plain" />
+			<batchtest fork="yes" todir="${report.tests.dir}">
+				<fileset dir="${testsrc.dir}">
+					<include name="**/Test*.java" />
+					<include name="**/Test*.aj" />
+					<include name="**/*TestCase.aj" />
+					<include name="**/*TestCase.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+	<target name="test" depends="junit,coverage" />
+	<target name="coverage" if="emma.dir">
+		<emma>
+			<report sourcepath="${src.dir},${testsrc.dir}" 
+		             columns="class,method,block,name"
+ 					metrics="method:70,block:80,line:80,class:100">
+				<fileset dir="${report.tests.dir}">
+					<include name="*.emma" />
+				</fileset>
+				<txt outfile="${report.tests.dir}/coverage.txt" depth="method"/>
+				<html outfile="${report.tests.dir}/coverage.html" depth="method"/>
+			</report>
+		</emma>
+	</target>
+
+	<!-- todo (probably in an integration build): build & test on different VMs -->
+
+	<target description="Clean" name="clean">
+		<delete dir="${output.dir}" />
+		<!-- delete only the files in dest dir, and NOT .cvsignore... -->
+		<delete>
+			<fileset dir="${dist.dir}" includes="**/*.jar" />
+		</delete>
+	</target>
+	<target name="all" depends="compile,test,jar" />
+</project>
