@@ -59,8 +59,20 @@ public abstract aspect AbstractTracing extends ExtensibleTracing {
      * Defines the scope of where tracing should occur. Does not need to address recursive tracing:
      * this is always excluded. 
      */
-    public abstract pointcut traceScope();
+	public pointcut traceScope() :
+        kindedScope() && scope();
+	
+	/**
+	 * Defines scope of tracing by kind of join points: defaults to not restricting by kind.
+	 * Useful to limit tracing to, e.g., execution or call.
+	 */
+	public pointcut kindedScope() : StandardPointcuts.always();
 
+	/**
+	 * Defines the scope of application within the kind of tracing that's being done; 
+	 */
+	public abstract pointcut scope();
+	
 	/**
 	 * Defines join points caused by tracing.
 	 */

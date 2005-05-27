@@ -65,7 +65,8 @@
 
 	<!-- Compiles production library code -->
 	<target name="compile" depends="init" unless="jar.current">
-		<iajc destdir="${prodoutput.dir}" incremental="false" source="1.3" target="1.3" sourceRootCopyFilter="**/*.java,**/CVS/**,**/*~,**/*#*,**/.#*,**/%*%,**/.cvsignore" xreweavable="true">
+		<iajc destdir="${prodoutput.dir}" incremental="false" source="1.3" target="1.3" x="reweavable:compress"
+			sourceRootCopyFilter="**/*.java,**/CVS/**,**/*~,**/*#*,**/.#*,**/%*%,**/.cvsignore">
 			<src location="${src.dir}" />
 			<exclude name="**/CVS/*" />
 			<classpath refid="project.class.path" />

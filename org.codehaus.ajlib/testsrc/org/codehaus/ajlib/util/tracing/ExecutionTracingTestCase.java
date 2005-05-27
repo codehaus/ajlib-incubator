@@ -8,7 +8,7 @@ import junit.framework.TestCase;
 
 public class ExecutionTracingTestCase extends TestCase {
 	protected MockTracer tracer;
-	protected TestTracedClass tracedClass;
+	protected TestTracedClass tracedObj;
 	
 	public void setUp() {
 		tracer = new MockTracer();
@@ -21,8 +21,9 @@ public class ExecutionTracingTestCase extends TestCase {
 //		MonitorTracingAspect.returnCount = 0;
 //		MonitorTracingAspect.throwCount = 0;	
 
+		// turn off tracing to avoid tracing the constructor call
 		AbstractTracing.setEnabled(false);
-		tracedClass = new TestTracedClass();
+		tracedObj = createTestObj();
 		TestTracedMonitorAspect.aspectOf();
 		AbstractTracing.setEnabled(true);
 	}
@@ -32,7 +33,7 @@ public class ExecutionTracingTestCase extends TestCase {
 	}
 
 	public void testMatchConstructor() {
-		tracedClass = new TestTracedClass();
+		tracedObj = new TestTracedClass();
 
 		assertEquals(1, tracer.enterCount);
 		assertNotNull(tracer.exitVoidJp);
@@ -43,7 +44,7 @@ public class ExecutionTracingTestCase extends TestCase {
 	}
 
 	public void testMatchMethodRetVoid() {	
-		tracedClass.voidMethod();
+		tracedObj.voidMethod();
 		assertEquals(1, tracer.enterCount);
 		assertNotNull(tracer.exitVoidJp);
 		assertNull(tracer.exitThrowingJp);
@@ -52,8 +53,8 @@ public class ExecutionTracingTestCase extends TestCase {
 	
 	public void testDisabledTracing() {
 		AbstractTracing.setEnabled(false);
-		tracedClass = new TestTracedClass();
-		tracedClass.voidMethod();
+		tracedObj = new TestTracedClass();
+		tracedObj.voidMethod();
 		assertEquals(0, tracer.enterCount);
 		
 		// cheapo performance test: verify no advice executes when not enabled
@@ -62,8 +63,8 @@ public class ExecutionTracingTestCase extends TestCase {
 	}
 		
 	public void testCalls() {
-		tracedClass = new TestTracedClass();
-		assertEquals(TestTracedClass.NESTED_VAL, tracedClass.nestedMethod());
+		tracedObj = new TestTracedClass();
+		assertEquals(TestTracedClass.NESTED_VAL, tracedObj.nestedMethod());
 		assertEquals(new Integer(TestTracedClass.NESTED_VAL), tracer.exitObj);
 		assertEquals(3, tracer.enterCount);
 	}
@@ -98,7 +99,7 @@ public class ExecutionTracingTestCase extends TestCase {
 	
 	public void testThrowing() {
 		try {
-			tracedClass.throwingMethod();
+			tracedObj.throwingMethod();
 			fail("tracing shouldn't prevent exceptions from percolating");
 		} catch (RemoteException e) {
 			assertEquals(1, tracer.enterCount);
@@ -152,13 +153,17 @@ public class ExecutionTracingTestCase extends TestCase {
 	
 	public void robustnessTest() {
 		// no NPE's please
-		tracedClass.mrHorrible(new Integer(1), 1);
-		tracedClass.mrHorrible(null, 0);
+		tracedObj.mrHorrible(new Integer(1), 1);
+		tracedObj.mrHorrible(null, 0);
 	}
 	
 	//TODO: real performance test
 	// we leave testing initialization form org.codehaus.ajlib.util.tracing.noTracing variable to
 	// integration test
+	
+	protected TestTracedClass createTestObj() {
+		return new TestTracedClass();
+	}
 
 	private static aspect TestExecutionTracing extends ExecutionTracing {
 		public pointcut scope() : within(ExecutionTracingTestCase.TestTraced*);
