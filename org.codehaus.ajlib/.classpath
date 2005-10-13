@@ -6,6 +6,6 @@
 	<classpathentry kind="var" path="ASPECTJRT_LIB"/>
 	<classpathentry sourcepath="ECLIPSE_HOME/plugins/org.eclipse.jdt.source_3.0.0/src/org.junit_3.8.1/junitsrc.zip" kind="var" path="JUNIT_HOME/junit.jar"/>
 	<classpathentry kind="lib" path="/lib/se/log4j/log4j-1.2.8.jar"/>
-	<classpathentry kind="lib" path="C:/eclipse2/plugins/org.aspectj.weaver_1.5.0.20050921171134/aspectjweaver.jar"/>
+	<classpathentry kind="var" path="AJWeaver-JAR"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
