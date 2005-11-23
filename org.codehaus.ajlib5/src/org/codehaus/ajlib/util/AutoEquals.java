@@ -8,7 +8,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * 
+ * Marker annotation for Fields and Classes.
+ * @see AutoEqualsAspect
  * 
  * @author Eric Bodden
  */
