@@ -1,5 +1,8 @@
 package org.codehaus.ajlib.util;
 
+import org.codehaus.ajlib.util.AutoEquals;
+import static org.codehaus.ajlib.util.AutoEquals.ReferenceRecursion.SHALLOW;
+
 import junit.framework.TestCase;
 
 /**
@@ -14,6 +17,7 @@ public class AutoEqualsTest extends TestCase {
         @AutoEquals int field1; 
         int field2;
         @AutoEquals Object o = null;
+        @AutoEquals(recursion=SHALLOW) Object s = null;
     }
     
     protected Foo foo1,foo2;
@@ -94,6 +98,21 @@ public class AutoEqualsTest extends TestCase {
         foo2.field1 = 1;
         foo2.field2 = 3;
         foo2.o = b;
+        
+        assertFalse(foo1.equals(foo2));
+    }
+    
+    public void testReferenceNegativeShallow() {
+        
+        String a = new String ("a");
+        String b = new String ("a");
+        
+        foo1.field1 = 1;
+        foo1.field2 = 2;
+        foo1.s = a;
+        foo2.field1 = 1;
+        foo2.field2 = 3;
+        foo2.s = b;
         
         assertFalse(foo1.equals(foo2));
     }

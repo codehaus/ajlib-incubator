@@ -9,12 +9,20 @@ import java.lang.annotation.Target;
 
 /**
  * Marker annotation for Fields and Classes.
+ * Use <code>SHALLOW</code> to compare object references by reference equality
+ * rather than recursing.
  * @see AutoEqualsAspect
- * 
  * @author Eric Bodden
  */
 @Retention(RUNTIME)
 @Target({TYPE,FIELD})
 public @interface AutoEquals {
 
+    enum ReferenceRecursion {
+        DEEP,
+        SHALLOW
+        }
+    
+    ReferenceRecursion recursion() default ReferenceRecursion.DEEP;
+    
 }
