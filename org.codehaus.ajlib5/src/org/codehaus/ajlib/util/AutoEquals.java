@@ -19,10 +19,10 @@ import java.lang.annotation.Target;
 public @interface AutoEquals {
 
     enum ReferenceRecursion {
-        DEEP,
-        SHALLOW
+        EQUALITY,
+        IDENTITY
         }
     
-    ReferenceRecursion recursion() default ReferenceRecursion.DEEP;
+    ReferenceRecursion referenceComparison() default ReferenceRecursion.EQUALITY;
     
 }

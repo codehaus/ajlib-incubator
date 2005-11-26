@@ -1,7 +1,7 @@
 package org.codehaus.ajlib.util;
 
 import org.codehaus.ajlib.util.AutoEquals;
-import static org.codehaus.ajlib.util.AutoEquals.ReferenceRecursion.SHALLOW;
+import static org.codehaus.ajlib.util.AutoEquals.ReferenceRecursion.IDENTITY;
 
 import junit.framework.TestCase;
 
@@ -17,7 +17,7 @@ public class AutoEqualsTest extends TestCase {
         @AutoEquals int field1; 
         int field2;
         @AutoEquals Object o = null;
-        @AutoEquals(recursion=SHALLOW) Object s = null;
+        @AutoEquals(referenceComparison=IDENTITY) Object s = null;
     }
     
     protected Foo foo1,foo2;

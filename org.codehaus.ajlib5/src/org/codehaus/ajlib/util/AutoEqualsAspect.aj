@@ -2,7 +2,7 @@ package org.codehaus.ajlib.util;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import static org.codehaus.ajlib.util.AutoEquals.ReferenceRecursion.SHALLOW;
+import static org.codehaus.ajlib.util.AutoEquals.ReferenceRecursion.IDENTITY;
 
 /**
  * AutoEqualsAspect - Implements the <code>equals</code> method for objects based on field equality.
@@ -71,7 +71,7 @@ public aspect AutoEqualsAspect {
                     }
                     
                     AutoEquals ae = (AutoEquals) anno;
-                    if(ae.recursion()==SHALLOW) {
+                    if(ae.referenceComparison()==IDENTITY) {
                         return false;
                     }
                     
@@ -89,4 +89,5 @@ public aspect AutoEqualsAspect {
         //all fine up till here? then we are equal
         return true;
     }
+
 }
