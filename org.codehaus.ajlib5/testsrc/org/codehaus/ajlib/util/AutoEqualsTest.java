@@ -18,6 +18,8 @@ public class AutoEqualsTest extends TestCase {
         int field2;
         @AutoEquals Object o = null;
         @AutoEquals(referenceComparison=IDENTITY) Object s = null;
+        @AutoEquals Object array = null;
+        @AutoEquals StringBuffer sb = null;
     }
     
     protected Foo foo1,foo2;
@@ -54,9 +56,11 @@ public class AutoEqualsTest extends TestCase {
         foo1.field1 = 1;
         foo1.field2 = 2;
         foo1.o = a;
+        foo1.array = new String[]{"1","2"};
         foo2.field1 = 1;
         foo2.field2 = 3;
         foo2.o = a;
+        foo2.array = new String[]{"1","2"};
         
         assertTrue(foo1.equals(foo2));
     }
@@ -115,6 +119,13 @@ public class AutoEqualsTest extends TestCase {
         foo2.s = b;
         
         assertFalse(foo1.equals(foo2));
+    }
+    
+    public void testStringBuffer() {
+        foo1.sb = new StringBuffer("s");
+        foo2.sb = new StringBuffer("s");
+
+        assertTrue(foo1.equals(foo2));
     }
     
 }
