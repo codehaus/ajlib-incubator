@@ -22,7 +22,9 @@ public @interface AutoEquals {
         EQUALITY,
         IDENTITY
         }
-    
+        
     ReferenceRecursion referenceComparison() default ReferenceRecursion.EQUALITY;
+    
+    boolean notHashcodeRelevant() default false;
     
 }

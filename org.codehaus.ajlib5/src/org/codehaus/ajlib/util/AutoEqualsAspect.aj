@@ -43,7 +43,7 @@ public class Main {
 public aspect AutoEqualsAspect {
 
     //marker interface
-    private interface HasAutoEquals{}
+    interface HasAutoEquals{}
     declare parents: (@AutoEquals *) implements HasAutoEquals;
 
     declare error: get(@AutoEquals transient * *.*): "Transient fields cannot be used for comparison."; 
