@@ -23,7 +23,7 @@ public class AutoHashCodeTest extends TestCase {
         @AutoEquals Object array = null;
         @AutoEquals StringBuffer sb = null;
         @AutoEquals boolean b = false;
-        @AutoEquals(hashcodeRelevant=true) String irrelevantString = null;
+        @AutoEquals(hashcodeRelevant=false) String irrelevantString = null;
     }
     
     protected Foo foo;
