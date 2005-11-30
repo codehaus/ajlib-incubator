@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 
 /**
  * Marker annotation for Fields and Classes.
- * Use <code>SHALLOW</code> to compare object references by reference equality
+ * Use <code>IDENTITY</code> to compare object references by reference equality
  * rather than recursing.
  * @see AutoEqualsAspect
  * @author Eric Bodden
@@ -25,6 +25,6 @@ public @interface AutoEquals {
         
     ReferenceRecursion referenceComparison() default ReferenceRecursion.EQUALITY;
     
-    boolean notHashcodeRelevant() default false;
+    boolean hashcodeRelevant() default true;
     
 }

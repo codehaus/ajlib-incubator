@@ -49,7 +49,7 @@ public aspect AutoHashcodeAspect {
                 AutoEquals ae = (AutoEquals) anno;
 
                 //if relevant for hashcode calculation
-                if(!(ae.notHashcodeRelevant())) {
+                if(ae.hashcodeRelevant()) {
                     
                     try {
                         //calculate hash code of field value
