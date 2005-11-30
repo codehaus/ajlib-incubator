@@ -1,10 +1,9 @@
 package org.codehaus.ajlib.util;
 
+import static org.codehaus.ajlib.util.AutoEquals.ReferenceRecursion.IDENTITY;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.codehaus.ajlib.util.AutoEquals;
-import static org.codehaus.ajlib.util.AutoEquals.ReferenceRecursion.IDENTITY;
 
 import junit.framework.TestCase;
 
@@ -93,4 +92,20 @@ public class AutoHashCodeTest extends TestCase {
         foo.irrelevantString = "someIrrelevantData";
         assertEquals(originalCode,foo.hashCode());
     }
+    
+    public void testOverride() {
+        final int CONSTANT = 8734632;
+        
+        Foo f = new Foo() {
+
+            public int hashCode() {
+                return CONSTANT;
+            }
+            
+        };
+        
+        //aspect should not affect existing implementations
+        assertEquals(f.hashCode(),CONSTANT);
+    }
+
 }

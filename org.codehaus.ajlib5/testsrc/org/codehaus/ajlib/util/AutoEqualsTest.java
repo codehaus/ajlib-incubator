@@ -1,8 +1,6 @@
 package org.codehaus.ajlib.util;
 
-import org.codehaus.ajlib.util.AutoEquals;
 import static org.codehaus.ajlib.util.AutoEquals.ReferenceRecursion.IDENTITY;
-
 import junit.framework.TestCase;
 
 /**
@@ -128,4 +126,16 @@ public class AutoEqualsTest extends TestCase {
         assertTrue(foo1.equals(foo2));
     }
     
+    public void testOverride() {
+        Foo foo = new Foo() {
+            
+            public boolean equals(@SuppressWarnings("unused") Object o) {
+                return false;
+            }
+            
+        };
+        
+        //aspect should not affect existing implementations
+        assertFalse(foo.equals(foo));
+    }
 }
