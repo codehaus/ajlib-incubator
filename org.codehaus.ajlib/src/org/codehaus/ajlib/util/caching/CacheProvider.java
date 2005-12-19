@@ -10,11 +10,22 @@
  *     Arno Schmidmeier
  * ******************************************************************/
 
+package org.codehaus.ajlib.util.caching;
 
-package org.codehaus.ajlib.util.timeouthandler;
+import org.aspectj.lang.JoinPoint;
 
-public interface ResultsReceiver {
-    public void setResult(Object result);
+/**
+ * @author Arno
+ *
+ */
+public interface CacheProvider {
     
-    public void setRuntimeException(RuntimeException exception);
+    public Object getKey(JoinPoint jp); 
+
+    public Object getCachedValue(Object key); 
+
+    public void invalidateCache(); 
+    
+    public void cache(JoinPoint jp,Object result);
+
 }

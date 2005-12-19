@@ -1,3 +1,16 @@
+/*******************************************************************
+ * Copyright (c) Arno Schmidmeier, http://www.AspectSoft.de
+ * All rights reserved. 
+ * This program and the accompanying materials are made available 
+ * under the terms of the Common Public License v1.0 
+ * which accompanies this distribution and is available at 
+ * http://www.eclipse.org/legal/cpl-v10.html 
+ *  
+ * Contributors: 
+ *     Arno Schmidmeier
+ * ******************************************************************/
+
+
 package org.codehaus.ajlib.util.timeouthandler;
 
 import junit.framework.TestCase;
@@ -23,7 +36,6 @@ public class TimeouthandlerTest extends TestCase {
             dothrowNullPointerException();
             fail("No NullPointerException received");
         }catch(NullPointerException e){
-            e.printStackTrace();
         }
         try {
             Thread.sleep(1000);

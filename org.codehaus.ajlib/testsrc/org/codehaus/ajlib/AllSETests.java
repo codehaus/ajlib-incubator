@@ -1,5 +1,7 @@
 package org.codehaus.ajlib;
 
+import org.codehaus.ajlib.util.caching.CacheTestCase;
+import org.codehaus.ajlib.util.recreate.ClassRecreationTest;
 import org.codehaus.ajlib.util.ressourcecontroller.RessourceControllerTestCase;
 import org.codehaus.ajlib.util.version.VersionTester;
 import org.codehaus.ajlib.util.timeouthandler.TimeouthandlerTest;
@@ -20,6 +22,8 @@ public class AllSETests {
 		suite.addTestSuite(VersionTester.class);
 		suite.addTestSuite(RessourceControllerTestCase.class);
         suite.addTestSuite(ExecutionTracingTestCase.class);
+        suite.addTestSuite(ClassRecreationTest.class);
+        suite.addTestSuite(CacheTestCase.class);
 		return suite;
 	}
 

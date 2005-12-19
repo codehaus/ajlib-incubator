@@ -10,11 +10,21 @@
  *     Arno Schmidmeier
  * ******************************************************************/
 
+package org.codehaus.ajlib.util.caching;
 
-package org.codehaus.ajlib.util.timeouthandler;
+/**
+ * @author Arno
+ *
+ */
+public aspect CacheTestAspect extends CachingAspect {
+    public CacheTestAspect(){
+        this.setCacheProvider(new DefaultCacheProvider());
+    }
 
-public interface ResultsReceiver {
-    public void setResult(Object result);
+    public pointcut CacheInvalidatingMethods():execution( * CacheTestObject.doSomethingInvalidatingCache());
     
-    public void setRuntimeException(RuntimeException exception);
+    public pointcut ExpensiveMethods():execution(public int CacheTestObject.getValue(..));
+    
+    
+
 }
