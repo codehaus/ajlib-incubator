@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
 
 // This adds a dependency on log4j... but it will only be loaded if extended & used by
+// a library user, i.e., you can use the library without having log4j on your classpath
 public class Log4jTracer implements Tracer {
 	private Logger logger;
 	private TraceFormatter formatter = new BasicTraceFormatter();
@@ -13,6 +14,10 @@ public class Log4jTracer implements Tracer {
 	
 	public Log4jTracer(String loggerName) {
 		logger = Logger.getLogger(loggerName);
+	}
+	
+	public Logger getLogger() {
+		return logger;
 	}
 	
 	public void setLogger(Logger logger) {
@@ -44,14 +49,7 @@ public class Log4jTracer implements Tracer {
 		logger.debug(formatter.exitThrowing(joinPoint, thrown));
 	}
 
-	/**
-	 * Policy aspect to always guard tracing so if the associated logger isn't configured for debug,
-	 * there's no tracing.
-	 */
-	static aspect GuardTracing {
-		void around(Log4jTracer tracer) : 
-	      execution(void Tracer.*(..)) && this(tracer) && if(!tracer.logger.isDebugEnabled()) {
-			// do nothing
-		}
+	public boolean isTraceEnabled(JoinPoint joinPoint) {
+		return logger.isDebugEnabled();
 	}
 }

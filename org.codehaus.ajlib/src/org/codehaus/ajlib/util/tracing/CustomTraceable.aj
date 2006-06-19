@@ -9,7 +9,7 @@ package org.codehaus.ajlib.util.tracing;
  *
  * Type for objects that have special tracing behavior. Implement this interface for a type to
  * create a specialized string representation when tracing, instead of the default, 
- * <code>toString</code>.
+ * <code>toString</code>. Often applied with an inter-type declaration.
  * 
  */
 public interface CustomTraceable {

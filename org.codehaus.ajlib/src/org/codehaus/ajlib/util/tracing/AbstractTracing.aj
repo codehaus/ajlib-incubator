@@ -19,7 +19,7 @@ public abstract aspect AbstractTracing extends ExtensibleTracing {
     /** 
      * A tracer is used to provide the tracing service. Defaults to the system.out tracer.  
      */
-	protected Tracer tracer = new SysoutTracer();
+	protected Tracer tracer = new PrintStreamTracer();
 
 	/**
 	 * Is this tracing aspect enabled at runtime?
