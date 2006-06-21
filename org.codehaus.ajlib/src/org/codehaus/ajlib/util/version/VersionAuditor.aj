@@ -92,10 +92,11 @@ public abstract aspect VersionAuditor {
 			debug("clazz is not Public");
 			return;
 		}
-		if (clazz.isAnonymousClass()){
-			debug("clazz is Anonymous");
-			return;
-		}
+		// removed for now: relies on a 1.5 API
+//		if (clazz.isAnonymousClass()){
+//			debug("clazz is Anonymous");
+//			return;
+//		}
 		if (clazz.isArray())
 			return;
 		if (clazz.toString().indexOf('$')>-1){
