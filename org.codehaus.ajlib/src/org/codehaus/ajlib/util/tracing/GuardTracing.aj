@@ -10,8 +10,10 @@ import org.aspectj.lang.JoinPoint;
  * there's no tracing.
  */
 aspect GuardTracing {
+	declare precedence: GuardTracing, AbstractTracing+;
+
 	void around(Tracer tracer, JoinPoint joinPoint) : 
-      execution(void Tracer.*(JoinPoint, ..)) && args(joinPoint) && this(tracer) && if(!tracer.isTraceEnabled(joinPoint)) {
+      within(Tracer+) && execution(void Tracer.*(JoinPoint, ..)) && args(joinPoint, ..) && this(tracer) && if(!tracer.isTraceEnabled(joinPoint)) {
 		// do nothing
 	}
 }

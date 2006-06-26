@@ -274,6 +274,11 @@ public class ExecutionTracingTestCase extends TestCase {
 		public void exitVoid(JoinPoint joinPoint) {
 			exitVoidJp = joinPoint;
 		}
+		
+		public boolean isTraceEnabled(JoinPoint joinPoint) {
+			return true;
+		}
+		
 	}
 	
 	static private aspect MonitorTracingAspect percflow(execution(* ExecutionTracingTestCase.test*(..))){

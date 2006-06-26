@@ -3,12 +3,6 @@
  */
 package org.codehaus.ajlib.util.tracing;
 
-//XXX: not supported by AspectJ 1.5 development as of 3/19/05
-//static import StandardPointcuts.*;
-
-//import org.aspectj.ajlib.integration.Bean;
-//@BeanConfig
-
 // We don't call this AbstractTracer, so it's clear that it's the protocol for tracing, not
 // the implementation of a tracer service. 
 
@@ -69,16 +63,28 @@ public abstract aspect AbstractTracing extends ExtensibleTracing {
 	public pointcut kindedScope() : StandardPointcuts.always();
 
 	/**
-	 * Defines the scope of application within the kind of tracing that's being done; 
+	 * Defines the scope of application within the kind of tracing that's being done
 	 */
 	public abstract pointcut scope();
-	
-	/**
-	 * Defines join points caused by tracing.
-	 */
+
+	// don't use this: apparently concrete aspects can't munge cflow either
+//	/**
+//	 * Defines join points caused by tracing.
+//	 */
 	public pointcut inTracing(): 
-		cflow(within(AbstractTracing+) && StandardPointcuts.anyExec());
-	
+		cflow(within(Tracer+) && StandardPointcuts.anyExec());
+//	public pointcut inTracing() : within(Tracer+ || AbstractTracing+);
+//
+//	static aspect SkipNestedTracing {
+//		private pointcut tracing(): 
+//			within(org.codehaus..*) && execution(void Tracer.*(..)); 
+//		
+//		void around() : tracing() && cflowbelow(tracing()) {			
+//		}
+//		void around() : tracing() && !cflowbelow(tracing()) {			
+//			proceed();
+//		}
+//	}
     /** 
      * Defines a scope of where tracing occurs: avoids recursive tracing and 
      * restricts to the configured scope by any aspects that extend it. 

@@ -5,9 +5,20 @@ import java.io.PrintStream;
 import org.aspectj.lang.JoinPoint;
 
 public class PrintStreamTracer implements Tracer {
-	protected TraceFormatter formatter = new BasicTraceFormatter();
+	protected static final String defaultFormatterClass = System.getProperty("org.codehaus.ajlib.util.tracing.formatter", "org.codehaus.ajlib.util.tracing.BasicTraceFormatter"); 
+	
+	protected TraceFormatter formatter = makeFormatter();
 	protected PrintStream printStream;
 	
+	private static TraceFormatter makeFormatter() {
+		try {
+			return (TraceFormatter)Class.forName(defaultFormatterClass).newInstance();
+		} catch (Exception e) {
+			System.err.println("Can't initialize formatter: "+defaultFormatterClass);
+			e.printStackTrace();
+			return new BasicTraceFormatter();
+		}
+	}
 	public PrintStreamTracer() {
 		this(System.out);
 	}
@@ -25,19 +36,19 @@ public class PrintStreamTracer implements Tracer {
 	}
 
 	public void enter(JoinPoint joinPoint) {
-		printStream.println(formatter.enter(joinPoint));		
+		getPrintStream().println(formatter.enter(joinPoint));		
 	}
 
 	public void exitReturning(JoinPoint joinPoint, Object retVal) {
-		printStream.println(formatter.exitReturning(joinPoint, retVal));		
+		getPrintStream().println(formatter.exitReturning(joinPoint, retVal));		
 	}
 
 	public void exitVoid(JoinPoint joinPoint) {
-		printStream.println(formatter.exitVoid(joinPoint));		
+		getPrintStream().println(formatter.exitVoid(joinPoint));		
 	}
 	
 	public void exitThrowing(JoinPoint joinPoint, Throwable thrown) {
-		printStream.println(formatter.exitThrowing(joinPoint, thrown));		
+		getPrintStream().println(formatter.exitThrowing(joinPoint, thrown));		
 	}
 	
 	public boolean isTraceEnabled(JoinPoint joinPoint) {
