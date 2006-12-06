@@ -1,5 +1,5 @@
 /*******************************************************************
- * Copyright (c) Arno Schmidmeier, http://www.AspectSoft.de
+ * Copyright (c) 2005-2006 Arno Schmidmeier, http://www.AspectSoft.de
  * All rights reserved. 
  * This program and the accompanying materials are made available 
  * under the terms of the Common Public License v1.0 
@@ -12,20 +12,16 @@
 
 package org.codehaus.ajlib.util.caching;
 
+
+import org.aspectj.lang.JoinPoint;
+
 /**
  * @author Arno
  *
  */
-public aspect CacheTestAspect extends CachingAspect {
-    public CacheTestAspect(){
-        this.setCacheProvider(new DefaultCacheProvider());
-        this.setKeyProvider(new DefaultKeyProvider());
+public class DefaultKeyProvider implements KeyProvider {
+
+    public Object getKey(JoinPoint jp) {
+        return new DefaultHashKey(jp);
     }
-
-    public pointcut CacheInvalidatingMethods():execution( * CacheTestObject.doSomethingInvalidatingCache());
-    
-    public pointcut ExpensiveMethods():execution(public int CacheTestObject.getValue(..));
-    
-    
-
 }

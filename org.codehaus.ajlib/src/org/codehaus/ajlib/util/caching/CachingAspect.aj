@@ -25,6 +25,8 @@ public abstract aspect CachingAspect {
     
     /////////////////////////////////////////////////////////////
     // The configuration Properties
+    private CacheProvider cacheProvider;
+    private KeyProvider keyProvider;
     
 
     public CacheProvider getCacheProvider() {
@@ -34,13 +36,23 @@ public abstract aspect CachingAspect {
     public void setCacheProvider(CacheProvider cacheProvider) {
         this.cacheProvider = cacheProvider;
     }
+    
+    public KeyProvider getKeyProvider() {
+        return keyProvider;
+    }
 
-    private CacheProvider cacheProvider;
-
+    public void setKeyProvider(KeyProvider keyProvider) {
+        this.keyProvider = keyProvider;
+    }
 
     /////////////////////////////////////////////////////////////
     // The aspect logic
 
+    private void audit(RuntimeException e){
+        e.printStackTrace();
+    }
+    
+    
     //TODO make Thread Save
     before():CacheInvalidatingMethods(){
         cacheProvider.invalidateCache();
@@ -49,16 +61,19 @@ public abstract aspect CachingAspect {
     
     Object around():ExpensiveMethods(){
         try{
-            Object key=cacheProvider.getKey(thisJoinPoint);
+            Object key=keyProvider.getKey(thisJoinPoint);
             if (key!=null){
-                return cacheProvider.getCachedValue(key);
+                if (cacheProvider.contains(key))
+                        return cacheProvider.getCachedValue(key);
             }
-        }catch(RuntimeException e){            
+        }catch(RuntimeException e){
+            audit(e);
         }
         Object toReturn=proceed();
         try{
             cacheProvider.cache(thisJoinPoint,toReturn);
         }catch(RuntimeException e){
+            audit(e);
         }
         return toReturn;
     }

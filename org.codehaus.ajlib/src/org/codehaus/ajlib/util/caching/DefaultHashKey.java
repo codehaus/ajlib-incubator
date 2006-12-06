@@ -43,6 +43,10 @@ public class DefaultHashKey {
             return false;
         if (!jp.getTarget().equals(key.jp.getTarget()))
             return false;
+        if ((jp.getThis()==null)&&(key.jp.getThis()!=null))
+            return false;
+        if (!jp.getThis().equals(key.jp.getThis()))
+            return false;
         Object[] args=jp.getArgs();
         Object[] argsother=key.jp.getArgs();
         return equalsArrays(args,argsother);

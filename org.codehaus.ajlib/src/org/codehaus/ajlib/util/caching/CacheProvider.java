@@ -19,9 +19,8 @@ import org.aspectj.lang.JoinPoint;
  *
  */
 public interface CacheProvider {
+    public boolean contains(Object key);
     
-    public Object getKey(JoinPoint jp); 
-
     public Object getCachedValue(Object key); 
 
     public void invalidateCache(); 

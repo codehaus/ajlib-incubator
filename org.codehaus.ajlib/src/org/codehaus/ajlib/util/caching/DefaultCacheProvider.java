@@ -1,5 +1,5 @@
 /*******************************************************************
- * Copyright (c) Arno Schmidmeier, http://www.AspectSoft.de
+ * Copyright (c) 2005-2006 Arno Schmidmeier, http://www.AspectSoft.de
  * All rights reserved. 
  * This program and the accompanying materials are made available 
  * under the terms of the Common Public License v1.0 
@@ -44,6 +44,10 @@ public class DefaultCacheProvider implements CacheProvider {
         map=new HashMap();
         oldMap.clear();
         oldMap=null;
+    }
+
+    public boolean contains(Object key) {
+        return map.containsKey(key);
     }
     
     
