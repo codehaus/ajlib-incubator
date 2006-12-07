@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.aspectj.weaver.WeavingURLClassLoader;
+import org.aspectj.weaver.loadtime.WeavingURLClassLoader;
 
 /**
  * Subclass of the AspectJ 1.2+ weaving url classloader. This version weaves
