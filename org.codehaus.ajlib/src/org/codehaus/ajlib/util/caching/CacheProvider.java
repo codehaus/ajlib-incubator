@@ -25,6 +25,6 @@ public interface CacheProvider {
 
     public void invalidateCache(); 
     
-    public void cache(JoinPoint jp,Object result);
+    public void cache(Object key,Object result);
 
 }

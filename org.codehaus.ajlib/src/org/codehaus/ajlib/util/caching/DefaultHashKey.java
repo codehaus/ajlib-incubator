@@ -37,7 +37,10 @@ public class DefaultHashKey {
             return false;
         if (key.jp==null)
             return false;
-        if (!jp.getStaticPart().equals(key.jp.getStaticPart()))
+//        if (!jp.getStaticPart().equals(key.jp.getStaticPart()))
+//           if (jp.getStaticPart().toString().equals(key.jp.getStaticPart().toString()))
+//            	System.out.println("Missmatch in JP Equalness");
+        if (!jp.getStaticPart().toString().equals(key.jp.getStaticPart().toString()))
             return false;
         if ((jp.getTarget()==null)&&(key.jp.getTarget()!=null))
             return false;
@@ -72,8 +75,12 @@ public class DefaultHashKey {
 
     public int hashCode() {
         if (jp!=null)
-            return jp.getStaticPart().hashCode();
+            return jp.getStaticPart().toString().hashCode();
         return super.hashCode();
+    }
+    
+    public String toString(){
+    	return "DefaultHashKey: "+hashCode()+" "+jp;
     }
     
 }

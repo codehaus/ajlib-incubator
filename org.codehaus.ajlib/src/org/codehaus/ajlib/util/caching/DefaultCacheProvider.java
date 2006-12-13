@@ -24,20 +24,20 @@ import org.aspectj.lang.JoinPoint;
 public class DefaultCacheProvider implements CacheProvider {
     private Map map=new HashMap();
 
-    public void cache(JoinPoint jp, Object result) {
-        map.put(new DefaultHashKey(jp),result);
+    public void cache(Object key, Object result) {
+        map.put(key,result);
     }
 
     public Object getCachedValue(Object key) {
         return map.get(key); 
     }
 
-    public Object getKey(JoinPoint jp) {
-        DefaultHashKey newKey=new DefaultHashKey(jp);
-        if (map.containsKey(newKey))
-            return newKey;
-        return null;
-    }
+//    public Object getKey(JoinPoint jp) {
+//        DefaultHashKey newKey=new DefaultHashKey(jp);
+//        if (map.containsKey(newKey))
+//            return newKey;
+//        return null;
+//    }
 
     public void invalidateCache() {
         Map oldMap=map;

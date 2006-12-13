@@ -60,8 +60,8 @@ public abstract aspect CachingAspect {
 
     
     Object around():ExpensiveMethods(){
+        Object key=keyProvider.getKey(thisJoinPoint);
         try{
-            Object key=keyProvider.getKey(thisJoinPoint);
             if (key!=null){
                 if (cacheProvider.contains(key))
                         return cacheProvider.getCachedValue(key);
@@ -71,7 +71,7 @@ public abstract aspect CachingAspect {
         }
         Object toReturn=proceed();
         try{
-            cacheProvider.cache(thisJoinPoint,toReturn);
+            cacheProvider.cache(key,toReturn);
         }catch(RuntimeException e){
             audit(e);
         }
