@@ -10,5 +10,5 @@ package org.codehaus.ajlib.util.tracing;
 public class ExtensibleTracing {
 	
 	public pointcut inTracingExclusion(): 
-		within(NotTraced);
+		within(NotTraced+);
 }

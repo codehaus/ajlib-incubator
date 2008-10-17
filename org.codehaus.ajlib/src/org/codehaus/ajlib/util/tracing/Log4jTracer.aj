@@ -34,22 +34,22 @@ public class Log4jTracer implements Tracer {
 
 	// TODO: report bug: don't report on no lazyTjp if no tjp used!!!
 	public void enter(JoinPoint joinPoint) {
-		logger.debug(formatter.enter(joinPoint));
+		logger.info(formatter.enter(joinPoint));
 	}
 
 	public void exitVoid(JoinPoint joinPoint) {
-		logger.debug(formatter.exitVoid(joinPoint));
+		logger.info(formatter.exitVoid(joinPoint));
 	}
 
 	public void exitReturning(JoinPoint joinPoint, Object retVal) {
-		logger.debug(formatter.exitReturning(joinPoint, retVal));
+		logger.info(formatter.exitReturning(joinPoint, retVal));
 	}
 
 	public void exitThrowing(JoinPoint joinPoint, Throwable thrown) {
-		logger.debug(formatter.exitThrowing(joinPoint, thrown));
+		logger.info(formatter.exitThrowing(joinPoint, thrown));
 	}
 
 	public boolean isTraceEnabled(JoinPoint joinPoint) {
-		return logger.isDebugEnabled();
+		return logger.isInfoEnabled();
 	}
 }

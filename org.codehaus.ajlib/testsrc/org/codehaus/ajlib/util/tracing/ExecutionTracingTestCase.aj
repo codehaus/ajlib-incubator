@@ -169,7 +169,7 @@ public class ExecutionTracingTestCase extends TestCase {
 		public pointcut scope() : within(ExecutionTracingTestCase.TestTraced*);
 	}
 
-	protected static class TestNotTracedClass {
+	static class TestNotTracedClass {
 		public void voidMethod() {}
 
 		public String beforeHook() {
@@ -185,11 +185,11 @@ public class ExecutionTracingTestCase extends TestCase {
 	}
 	
 	// ensure that we trace based on the within pointcut, not the parent class: 
-	protected static class TestNotTracedSubclass extends TestTracedClass {
+	static class TestNotTracedSubclass extends TestTracedClass {
 		public void voidMethod() {}		
 	}
 	
-	protected static class TestTracedClass {
+	static class TestTracedClass {
 		boolean completedVoid = false;
 		public static final int NESTED_VAL = 55;
 		
@@ -243,17 +243,29 @@ public class ExecutionTracingTestCase extends TestCase {
 		}
 	}
 	
+	static MockTracer lastMockTracer = null;
+	
 	/**
 	 * better: use jMock  ...
 	 * conceptually easier to unit test with a mock, but in practice it helps to have trace output
 	 */
-	protected class MockTracer implements Tracer {
+	static class MockTracer implements Tracer {
 		int enterCount = 0;
 		JoinPoint enterJp = null;
 		JoinPoint exitVoidJp = null;
 		JoinPoint exitReturningJp = null;
 		JoinPoint exitThrowingJp = null;
 		Object exitObj = null;
+		String name = null;
+		
+		public MockTracer() {
+			this(null);
+		}
+		
+		public MockTracer(String name) { 
+			this.name = name; 
+			lastMockTracer = this;
+		}
 
 		public void enter(JoinPoint joinPoint) {
 			enterJp = joinPoint;
